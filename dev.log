@@ -1,0 +1,147 @@
+
+> fitness_tracker@0.1.0 dev
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.5 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://10.78.225.98:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 689ms
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 2.1s (compile: 2.0s, render: 87ms)
+ ✓ Compiled in 8ms
+ ✓ Compiled in 7ms
+ ✓ Compiled in 5ms
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 85ms (compile: 37ms, render: 48ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /login 200 in 457ms (compile: 430ms, render: 26ms)
+ GET /login 200 in 16ms (compile: 2ms, render: 14ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /register. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /register 200 in 279ms (compile: 269ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 31ms (compile: 4ms, render: 26ms)
+ GET / 200 in 14ms (compile: 2ms, render: 12ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 22ms (compile: 2ms, render: 19ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /profile 200 in 326ms (compile: 316ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /login 200 in 41ms (compile: 9ms, render: 32ms)
+ GET /login 200 in 20ms (compile: 3ms, render: 17ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 23ms (compile: 4ms, render: 19ms)
+ GET / 200 in 11ms (compile: 2ms, render: 9ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /profile 200 in 18ms (compile: 5ms, render: 13ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /login 200 in 27ms (compile: 5ms, render: 22ms)
+ GET /login 200 in 13ms (compile: 2ms, render: 11ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 26ms (compile: 5ms, render: 21ms)
+ GET / 200 in 11ms (compile: 2ms, render: 9ms)
+Gemini Raw Response: ```json
+{
+  "name": "瑞幸冰美式",
+  "calories": 15,
+  "carbs": 2,
+  "protein": 1,
+  "fat": 0
+}
+```
+ POST /api/analyze-food 200 in 17.8s (compile: 143ms, render: 17.7s)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /workout. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /workout 200 in 229ms (compile: 217ms, render: 12ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /trends. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /trends 200 in 384ms (compile: 374ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /profile 200 in 20ms (compile: 6ms, render: 15ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /login 200 in 27ms (compile: 4ms, render: 22ms)
+ GET /login 200 in 13ms (compile: 2ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 17ms (compile: 2ms, render: 15ms)
+ GET / 200 in 9ms (compile: 1789µs, render: 8ms)
+Gemini Raw Response: ```json
+{
+  "name": "瑞幸冰美式咖啡",
+  "calories": 0,
+  "carbs": 0,
+  "protein": 0,
+  "fat": 0
+}
+```
+ POST /api/analyze-food 200 in 11.8s (compile: 3ms, render: 11.8s)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /workout. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /workout 200 in 12ms (compile: 4ms, render: 8ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /trends. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /trends 200 in 14ms (compile: 4ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /profile 200 in 15ms (compile: 5ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /login 200 in 24ms (compile: 8ms, render: 17ms)
+ GET /login 200 in 10ms (compile: 1528µs, render: 8ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 21ms (compile: 4ms, render: 18ms)
+ GET / 200 in 10ms (compile: 1541µs, render: 8ms)
+Gemini Raw Response: ```json
+{
+  "name": "瑞幸冰美式",
+  "calories": 0,
+  "carbs": 0,
+  "protein": 0,
+  "fat": 0
+}
+```
+ POST /api/analyze-food 200 in 8.6s (compile: 3ms, render: 8.6s)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /trends. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /trends 200 in 12ms (compile: 2ms, render: 10ms)
+ ⚠ Unsupported metadata viewport is configured in metadata export in /workout. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /workout 200 in 11ms (compile: 3ms, render: 8ms)

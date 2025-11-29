@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --foreground-muted: #8e8e93;
+
+  /* Nike/Apple Neon Accents */
+  --primary: #ccff00;
+  /* Volt */
+  --secondary: #ff3b30;
+  /* Red */
+
+  /* Surface for Glassmorphism */
+  --surface: rgba(28, 28, 30, 0.6);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .glass-card {
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-shadow-neon {
+    text-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+  }
+
+  .pt-safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
