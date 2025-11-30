@@ -37,6 +37,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Load current user on mount
     useEffect(() => {
         let mounted = true;
+        let authStateChangeHandled = false;
+
+        // Timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+            if (mounted && !authStateChangeHandled) {
+                console.warn("Auth initialization timeout, setting loading to false");
+                setIsLoading(false);
+            }
+        }, 5000); // 5 second timeout
 
         // Get initial session
         const initializeAuth = async () => {
@@ -45,19 +54,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 
                 if (error) {
                     console.error("Error getting session:", error);
-                    if (mounted) setIsLoading(false);
+                    if (mounted) {
+                        setIsLoading(false);
+                        authStateChangeHandled = true;
+                    }
                     return;
                 }
 
                 if (session?.user && mounted) {
                     setSupabaseUser(session.user);
                     await loadUserProfile(session.user.id);
+                    authStateChangeHandled = true;
                 } else if (mounted) {
                     setIsLoading(false);
+                    authStateChangeHandled = true;
                 }
             } catch (error) {
                 console.error("Error initializing auth:", error);
-                if (mounted) setIsLoading(false);
+                if (mounted) {
+                    setIsLoading(false);
+                    authStateChangeHandled = true;
+                }
             }
         };
 
@@ -68,6 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (!mounted) return;
+            authStateChangeHandled = true;
+            clearTimeout(timeoutId);
 
             if (session?.user) {
                 setSupabaseUser(session.user);
@@ -81,6 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         return () => {
             mounted = false;
+            clearTimeout(timeoutId);
             subscription.unsubscribe();
         };
     }, []);
