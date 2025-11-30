@@ -40,7 +40,19 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=你的_anon_public_key
 5. 点击 **Run** 或按 `Cmd/Ctrl + Enter`
 6. 确认所有表创建成功（应该看到 "Success. No rows returned"）
 
-## 📋 第五步：配置 Storage（可选，用于存储图片）
+## 📋 第五步：禁用邮箱确认（重要！）
+
+为了让新用户注册后可以立即登录，需要禁用邮箱确认：
+
+1. 在 Supabase Dashboard 中，点击左侧菜单的 **Authentication**
+2. 点击 **Providers**
+3. 找到 **Email** 提供者
+4. 取消勾选 **"Confirm email"** 选项
+5. 点击 **Save** 保存设置
+
+**注意**：禁用邮箱确认后，用户注册后可以立即登录，无需验证邮箱。
+
+## 📋 第六步：配置 Storage（可选，用于存储图片）
 
 1. 在 Supabase Dashboard 中，点击左侧菜单的 **Storage**
 2. 点击 **Create a new bucket**

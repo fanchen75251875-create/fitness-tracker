@@ -44,6 +44,10 @@ export default function RegisterPage() {
         
         if (!result.success) {
             setError(result.error || "注册失败");
+        } else if (result.error) {
+            // 注册成功但需要邮箱确认
+            setError(result.error);
+            // 仍然会跳转到首页，但显示提示信息
         }
         // 成功时 router.push 已在 register 函数中处理
     };

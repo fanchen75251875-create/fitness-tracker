@@ -36,31 +36,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Load current user on mount
     useEffect(() => {
+        let mounted = true;
+
         // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session?.user) {
-                setSupabaseUser(session.user);
-                loadUserProfile(session.user.id);
-            } else {
-                setIsLoading(false);
+        const initializeAuth = async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    console.error("Error getting session:", error);
+                    if (mounted) setIsLoading(false);
+                    return;
+                }
+
+                if (session?.user && mounted) {
+                    setSupabaseUser(session.user);
+                    await loadUserProfile(session.user.id);
+                } else if (mounted) {
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                console.error("Error initializing auth:", error);
+                if (mounted) setIsLoading(false);
             }
-        });
+        };
+
+        initializeAuth();
 
         // Listen for auth changes
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (!mounted) return;
+
             if (session?.user) {
                 setSupabaseUser(session.user);
                 await loadUserProfile(session.user.id);
             } else {
                 setSupabaseUser(null);
                 setCurrentUser(null);
+                setIsLoading(false);
             }
-            setIsLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            mounted = false;
+            subscription.unsubscribe();
+        };
     }, []);
 
     const loadUserProfile = async (userId: string) => {
@@ -80,13 +102,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Get email from auth.users
             const { data: { user } } = await supabase.auth.getUser();
 
-            setCurrentUser({
-                id: userId,
-                username: profile?.username || user?.email?.split("@")[0] || "用户",
-                email: user?.email,
-                avatar: profile?.avatar_url || undefined,
-                createdAt: user?.created_at ? new Date(user.created_at).getTime() : Date.now(),
-            });
+            if (user) {
+                setCurrentUser({
+                    id: userId,
+                    username: profile?.username || user?.email?.split("@")[0] || "用户",
+                    email: user?.email,
+                    avatar: profile?.avatar_url || undefined,
+                    createdAt: user?.created_at ? new Date(user.created_at).getTime() : Date.now(),
+                });
+            }
         } catch (error) {
             console.error("Error loading user profile:", error);
         } finally {
@@ -127,6 +151,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/`,
+                },
             });
 
             if (authError) {
@@ -148,10 +175,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Continue anyway, profile can be created later
             }
 
-            // Auto login after registration
-            await loadUserProfile(authData.user.id);
-            router.push("/");
-            return { success: true };
+            // Check if email confirmation is required
+            // If session exists, user can login immediately
+            if (authData.session) {
+                // User is automatically logged in (email confirmation disabled)
+                setSupabaseUser(authData.user);
+                await loadUserProfile(authData.user.id);
+                router.push("/");
+                return { success: true };
+            } else {
+                // Email confirmation is required
+                // Still set the user state so they can see a message
+                setSupabaseUser(authData.user);
+                await loadUserProfile(authData.user.id);
+                router.push("/");
+                return { 
+                    success: true,
+                    error: "请检查你的邮箱并点击确认链接以完成注册" 
+                };
+            }
         } catch (error: any) {
             return { success: false, error: error.message || "注册失败" };
         }
