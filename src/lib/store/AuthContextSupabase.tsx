@@ -138,9 +138,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
         });
 
+        // Ensure we always set loading to false if onAuthStateChange doesn't fire
+        // This is a safety net in case the event doesn't fire
+        const safetyTimeoutId = setTimeout(() => {
+            if (mounted && !isInitialized) {
+                console.warn("Auth state change not received, forcing loading to false");
+                setIsLoading(false);
+                isInitialized = true;
+            }
+        }, 3000); // 3 second safety timeout
+
         return () => {
             mounted = false;
             clearTimeout(timeoutId);
+            clearTimeout(safetyTimeoutId);
             subscription.unsubscribe();
         };
     }, []);

@@ -19,12 +19,16 @@ export function LayoutContent({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // Redirect if needed
-        if (!currentUser && !isAuthPage) {
-            router.push("/login");
-        } else if (currentUser && isAuthPage) {
-            router.push("/");
-        }
+        // Redirect if needed (with a small delay to prevent infinite loops)
+        const redirectTimer = setTimeout(() => {
+            if (!currentUser && !isAuthPage) {
+                router.push("/login");
+            } else if (currentUser && isAuthPage) {
+                router.push("/");
+            }
+        }, 100);
+
+        return () => clearTimeout(redirectTimer);
     }, [currentUser, isAuthPage, router, isLoading]);
 
     // Show loading only while auth is initializing
