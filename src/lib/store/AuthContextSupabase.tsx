@@ -37,57 +37,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Load current user on mount
     useEffect(() => {
         let mounted = true;
-        let authStateChangeHandled = false;
+        let isInitialized = false;
 
-        // Timeout to prevent infinite loading
+        // Timeout to prevent infinite loading - reduced to 3 seconds
         const timeoutId = setTimeout(() => {
-            if (mounted && !authStateChangeHandled) {
+            if (mounted && !isInitialized) {
                 console.warn("Auth initialization timeout, setting loading to false");
                 setIsLoading(false);
+                isInitialized = true;
             }
-        }, 5000); // 5 second timeout
+        }, 3000); // 3 second timeout
 
         // Get initial session
         const initializeAuth = async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 
+                if (!mounted) return;
+
                 if (error) {
                     console.error("Error getting session:", error);
-                    if (mounted) {
-                        setIsLoading(false);
-                        authStateChangeHandled = true;
-                    }
+                    setIsLoading(false);
+                    isInitialized = true;
+                    clearTimeout(timeoutId);
                     return;
                 }
 
-                if (session?.user && mounted) {
+                if (session?.user) {
                     setSupabaseUser(session.user);
                     await loadUserProfile(session.user.id);
-                    authStateChangeHandled = true;
-                } else if (mounted) {
+                } else {
                     setIsLoading(false);
-                    authStateChangeHandled = true;
                 }
+                isInitialized = true;
+                clearTimeout(timeoutId);
             } catch (error) {
                 console.error("Error initializing auth:", error);
                 if (mounted) {
                     setIsLoading(false);
-                    authStateChangeHandled = true;
+                    isInitialized = true;
+                    clearTimeout(timeoutId);
                 }
             }
         };
 
+        // Start initialization immediately
         initializeAuth();
 
-        // Listen for auth changes
+        // Listen for auth changes (this may fire immediately or later)
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (!mounted) return;
-            authStateChangeHandled = true;
+            
+            // Clear timeout since we got an auth state change
             clearTimeout(timeoutId);
-
+            
             if (session?.user) {
                 setSupabaseUser(session.user);
                 await loadUserProfile(session.user.id);
@@ -95,6 +100,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setSupabaseUser(null);
                 setCurrentUser(null);
                 setIsLoading(false);
+            }
+            
+            if (!isInitialized) {
+                isInitialized = true;
             }
         });
 
@@ -108,19 +117,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const loadUserProfile = async (userId: string) => {
         try {
             // Load user profile from user_profiles table
-            const { data: profile, error } = await supabase
+            const { data: profile, error: profileError } = await supabase
                 .from("user_profiles")
                 .select("*")
                 .eq("id", userId)
                 .single();
 
-            if (error && error.code !== "PGRST116") {
+            if (profileError && profileError.code !== "PGRST116") {
                 // PGRST116 = no rows returned, which is OK for new users
-                console.error("Error loading profile:", error);
+                console.error("Error loading profile:", profileError);
             }
 
             // Get email from auth.users
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+            if (userError) {
+                console.error("Error getting user:", userError);
+                setIsLoading(false);
+                return;
+            }
 
             if (user) {
                 setCurrentUser({
