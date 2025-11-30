@@ -7,22 +7,29 @@ import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 export function LayoutContent({ children }: { children: React.ReactNode }) {
-    const { currentUser } = useAuth();
+    const { currentUser, isLoading } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
 
     const isAuthPage = pathname === "/login" || pathname === "/register";
 
     useEffect(() => {
+        // Only redirect after loading is complete
+        if (isLoading) {
+            setIsRedirecting(false);
+            return;
+        }
+
+        // Redirect if needed
         if (!currentUser && !isAuthPage) {
             router.push("/login");
         } else if (currentUser && isAuthPage) {
             router.push("/");
         }
-    }, [currentUser, isAuthPage, router]);
+    }, [currentUser, isAuthPage, router, isLoading]);
 
-    // Show loading while redirecting
-    if ((!currentUser && !isAuthPage) || (currentUser && isAuthPage)) {
+    // Show loading only while auth is initializing
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-black text-white flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
