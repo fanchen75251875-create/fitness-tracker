@@ -31,25 +31,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [clientError, setClientError] = useState<Error | null>(null);
     const router = useRouter();
-    const supabase = createClient();
+    
+    // Create supabase client with error handling
+    let supabase;
+    try {
+        supabase = createClient();
+    } catch (error) {
+        console.error("Failed to create Supabase client:", error);
+        setClientError(error as Error);
+    }
 
     // Load current user on mount
     useEffect(() => {
+        // If client creation failed, stop loading immediately
+        if (clientError || !supabase) {
+            setIsLoading(false);
+            return;
+        }
+
         let mounted = true;
         let isInitialized = false;
 
-        // Timeout to prevent infinite loading - reduced to 3 seconds
+        // Timeout to prevent infinite loading - reduced to 2 seconds for faster response
         const timeoutId = setTimeout(() => {
             if (mounted && !isInitialized) {
                 console.warn("Auth initialization timeout, setting loading to false");
                 setIsLoading(false);
                 isInitialized = true;
+                // Ensure currentUser is null if no session
+                if (!supabaseUser) {
+                    setCurrentUser(null);
+                }
             }
-        }, 3000); // 3 second timeout
+        }, 2000); // 2 second timeout
 
         // Get initial session
         const initializeAuth = async () => {
+            if (!supabase) {
+                setIsLoading(false);
+                return;
+            }
+            
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 
@@ -67,6 +91,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setSupabaseUser(session.user);
                     await loadUserProfile(session.user.id);
                 } else {
+                    // No session, clear user state and stop loading
+                    setSupabaseUser(null);
+                    setCurrentUser(null);
                     setIsLoading(false);
                 }
                 isInitialized = true;
@@ -85,6 +112,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         initializeAuth();
 
         // Listen for auth changes (this may fire immediately or later)
+        if (!supabase) {
+            return;
+        }
+        
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -145,10 +176,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     avatar: profile?.avatar_url || undefined,
                     createdAt: user?.created_at ? new Date(user.created_at).getTime() : Date.now(),
                 });
+            } else {
+                // User not found, clear state
+                setCurrentUser(null);
             }
         } catch (error) {
             console.error("Error loading user profile:", error);
         } finally {
+            // Always set loading to false, regardless of success or failure
             setIsLoading(false);
         }
     };
