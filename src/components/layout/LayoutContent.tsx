@@ -16,7 +16,6 @@ export function LayoutContent({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         // Only redirect after loading is complete
         if (isLoading) {
-            setIsRedirecting(false);
             return;
         }
 

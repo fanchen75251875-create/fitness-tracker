@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { User as SupabaseUser } from "@supabase/supabase-js";
+import { User as SupabaseUser, SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
 export type User = {
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     
     // Create supabase client with error handling
-    let supabase;
+    let supabase: ReturnType<typeof createClient> | null = null;
     try {
         supabase = createClient();
     } catch (error) {
@@ -146,6 +146,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const loadUserProfile = async (userId: string) => {
+        if (!supabase) {
+            setIsLoading(false);
+            return;
+        }
+        
         try {
             // Load user profile from user_profiles table
             const { data: profile, error: profileError } = await supabase
@@ -189,6 +194,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+        if (!supabase) {
+            return { success: false, error: "Supabase client not available" };
+        }
+        
         try {
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
@@ -216,6 +225,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password: string,
         username: string
     ): Promise<{ success: boolean; error?: string }> => {
+        if (!supabase) {
+            return { success: false, error: "Supabase client not available" };
+        }
+        
         try {
             // Register user
             const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -270,14 +283,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const logout = async (): Promise<void> => {
-        await supabase.auth.signOut();
+        if (supabase) {
+            await supabase.auth.signOut();
+        }
         setCurrentUser(null);
         setSupabaseUser(null);
         router.push("/login");
     };
 
     const updateAvatar = async (avatar: string): Promise<void> => {
-        if (!supabaseUser) return;
+        if (!supabaseUser || !supabase) return;
 
         const { error } = await supabase
             .from("user_profiles")
@@ -292,6 +307,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const updatePassword = async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
+        if (!supabase) {
+            return { success: false, error: "Supabase client not available" };
+        }
+        
         try {
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
@@ -308,8 +327,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const updateProfile = async (username: string): Promise<{ success: boolean; error?: string }> => {
-        if (!supabaseUser) {
-            return { success: false, error: "未登录" };
+        if (!supabaseUser || !supabase) {
+            return { success: false, error: "未登录或 Supabase 客户端不可用" };
         }
 
         try {
